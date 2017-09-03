@@ -65,7 +65,7 @@ describe('GET /todos', () => {
       .get('/todos')
       .expect(200)
       .expect((res) => {
-        expect(res.body.todos.length).toBe(2);
+        expect(res.body.todos.length).toBe(2); // 2 because before each re-runs for every test case (the POST in the prevoius test case do not add todo by 1 cuz database is reset)
       })
       .end(done);
   })
