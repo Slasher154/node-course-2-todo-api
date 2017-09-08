@@ -1,72 +1,25 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
+var {LinkRequests} = require('./models/link_requests');
 
 var app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 23324;
 
 app.use(bodyParser.json());
 
-app.post('/todos', (req, res) => {
-  var todo = new Todo({
-    text: req.body.text
-  });
-
-  todo.save().then((doc) => {
-    res.send(doc);
-  }, (e) => {
-    res.status(400).send(e);
-  });
-});
-
-app.get('/todos', (req, res) => {
-  Todo.find().then((todos) => {
+app.get('/link_requests', (req, res) => {
+  LinkRequests.find().then((lq) => {
     res.send({
-      todos,
+      lq,
     });
   }, (e) => {
     res.status(400).send(e);
   });
 });
-
-app.get('/todos/:id', (req, res) => {
-  var id = req.params.id;
-
-  // valid id using isValid
-  if (!ObjectID.isValid(id)) {
-    return res.status(400).send('ID is not valid');
-  }
-
-  Todo.findById(id).then((todo) => {
-    if (!todo) {
-      res.status(404).send();
-    }
-    res.send({todo});
-  }).catch((e) => {
-    res.status(400).send();
-  });
-});
-
-app.delete('/todos/:id', (req, res) => {
-  var id = req.params.id;
-  // valid id using isValid
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send('ID is not valid');
-  }
-
-  Todo.findByIdAndRemove(id).then((todo) => {
-    if(!todo) {
-      res.status(404).send('Todo not found');
-    }
-    res.send(`${todo.text} is removed!!`);
-  }).catch((e) => {
-    res.status(400).send();
-  })
-})
 
 app.listen(port, () => {
   console.log(`Started on port ${port}`);
