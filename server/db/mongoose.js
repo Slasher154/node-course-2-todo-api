@@ -4,6 +4,6 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 // Mongoose maintains connection for us, no need to use callback like MongoClient
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+mongoose.connect('mongodb://localhost:27017/link');
 
 module.exports = {mongoose};
